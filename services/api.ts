@@ -2,9 +2,8 @@ import { io, Socket } from 'socket.io-client';
 import { Expense } from '../data/mockExpenses';
 import { User } from '../data/mockUsers';
 
-// Change SERVER_URL to your Mac's IP address if testing on physical phone over Wi-Fi
-// e.g., 'http://192.168.1.5:5000'
-export const SERVER_URL = 'http://localhost:5000';
+// Production Live Backend Server URL on Render
+export const SERVER_URL = 'https://mob-application.onrender.com';
 
 let socket: Socket | null = null;
 
