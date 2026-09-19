@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_tab" name="shell-type"/><title>Balances</title><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{width:100vw;margin:0;padding:0;}body{overscroll-behavior:none;-webkit-tap-highlight-color:transparent;}.pb-safe{padding-bottom:max(0.75rem,env(safe-area-inset-bottom,0px));}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{"colors":{"text-muted":"#94A3B8","tertiary-fixed-dim":"#4edea3","text-primary":"#0F172A","secondary-container":"#dae2fd","on-error":"#ffffff","on-tertiary":"#ffffff","text-secondary":"#64748B","balance-negative-bg":"#FFF1F2","surface-container-lowest":"#ffffff","on-primary-container":"#f5fff7","surface-container-low":"#f2f4f6","on-tertiary-container":"#f5fff6","accent-emerald-glow":"rgba(5, 150, 105, 0.25)","secondary-fixed-dim":"#bec6e0","surface":"#f7f9fb","on-surface-variant":"#3d4a42","outline":"#6d7a72","balance-positive":"#059669","border-translucent":"rgba(226, 232, 240, 0.6)","surface-container-highest":"#e0e3e5","on-primary-fixed-variant":"#005137","balance-positive-bg":"#ECFDF5","on-tertiary-fixed":"#002113","primary-fixed":"#85f8c4","primary-fixed-dim":"#68dba9","surface-variant":"#e0e3e5","on-background":"#191c1e","error":"#ba1a1a","surface-card":"#FFFFFF","on-primary-fixed":"#002114","error-container":"#ffdad6","inverse-surface":"#2d3133","primary-container":"#00855d","primary":"#006948","balance-negative":"#E11D48","on-surface":"#191c1e","on-secondary-fixed-variant":"#3f465c","on-secondary":"#ffffff","surface-bright":"#f7f9fb","tertiary-container":"#00855b","inverse-primary":"#68dba9","surface-tint":"#006c4a","surface-dim":"#d8dadc","inverse-on-surface":"#eff1f3","secondary-fixed":"#dae2fd","on-error-container":"#93000a","surface-container":"#eceef0","outline-variant":"#bccac0","surface-subtle":"#F1F5F9","background":"#f7f9fb","on-secondary-fixed":"#131b2e","surface-container-high":"#e6e8ea","on-secondary-container":"#5c647a","secondary":"#565e74","on-tertiary-fixed-variant":"#005236","on-primary":"#ffffff","border-delicate":"#E2E8F0","tertiary-fixed":"#6ffbbe","tertiary":"#006947"},"borderRadius":{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},"spacing":{"space-lg":"1.5rem","space-sm":"0.5rem","space-xs":"0.25rem","margin-mobile":"1rem","margin":"1.5rem","gutter-mobile":"0.75rem","space-xl":"2rem","space-md":"1rem","gutter":"1rem"},"fontFamily":{"label-caps":["Plus Jakarta Sans"],"label-sm":["Plus Jakarta Sans"],"headline-sm":["Plus Jakarta Sans"],"body-sm":["Plus Jakarta Sans"],"body-md":["Plus Jakarta Sans"],"headline-lg-mobile":["Plus Jakarta Sans"],"headline-md":["Plus Jakarta Sans"],"headline-lg":["Plus Jakarta Sans"],"body-lg":["Plus Jakarta Sans"],"headline-xl-mobile":["Plus Jakarta Sans"],"headline-xl":["Plus Jakarta Sans"],"currency-display":["Plus Jakarta Sans"],"label-md":["Plus Jakarta Sans"]},"fontSize":{"label-caps":["11px",{"lineHeight":"16px","letterSpacing":"0.06em","fontWeight":"700"}],"label-sm":["12px",{"lineHeight":"16px","letterSpacing":"0em","fontWeight":"600"}],"headline-sm":["18px",{"lineHeight":"26px","letterSpacing":"-0.01em","fontWeight":"600"}],"body-sm":["13px",{"lineHeight":"18px","letterSpacing":"0em","fontWeight":"400"}],"body-md":["14px",{"lineHeight":"22px","letterSpacing":"0em","fontWeight":"400"}],"headline-lg-mobile":["24px",{"lineHeight":"32px","letterSpacing":"-0.02em","fontWeight":"700"}],"headline-md":["20px",{"lineHeight":"28px","letterSpacing":"-0.015em","fontWeight":"700"}],"headline-lg":["30px",{"lineHeight":"38px","letterSpacing":"-0.02em","fontWeight":"700"}],"body-lg":["16px",{"lineHeight":"24px","letterSpacing":"-0.005em","fontWeight":"500"}],"headline-xl-mobile":["28px",{"lineHeight":"36px","letterSpacing":"-0.025em","fontWeight":"800"}],"headline-xl":["36px",{"lineHeight":"44px","letterSpacing":"-0.03em","fontWeight":"800"}],"currency-display":["34px",{"lineHeight":"40px","letterSpacing":"-0.03em","fontWeight":"800"}],"label-md":["14px",{"lineHeight":"20px","letterSpacing":"-0.005em","fontWeight":"600"}]}}}};</script><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="bg-surface font-body-md text-body-md text-text-primary min-h-screen flex flex-col antialiased selection:bg-balance-positive selection:text-surface-container-lowest"><header class="fixed top-0 inset-x-0 z-50 bg-surface/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.03)] pt-safe"><div class="h-16 px-margin-mobile flex items-center justify-between"><div class="flex items-center gap-space-sm min-w-0"><img alt="FlatLedger Logo" class="h-8 w-auto object-contain shrink-0" src="https://lh3.googleusercontent.com/aida/AEtjO1WBoYHm_NUQEX4QaRh67_IJrfl3Rd-dHKRaqv58GeP9LHOa5ayCI_qk_qtbghzZWt-hvyzQzbaWaNyb7hAEa8ZqGf-q9lxdYnNZg6FVPK7Ociy1i0JnaJU-udkvsb_jmu_qWsizadl4-5z7w2dnIFjDpFF4nG8dd_5s2bHIZ_VUOEJbK_uNzcF4Hp2bojLq7-bj2yElVotTD8bO2R_u_xAeUfrA_vH_f9_3pBiVmePL8PQdDHQpGoromA"/><div class="flex flex-col min-w-0"><div class="flex items-center gap-1.5"><span class="font-headline-sm text-headline-sm text-text-primary truncate tracking-tight">FlatLedger</span><div class="flex items-center gap-1 px-2 py-0.5 rounded-full bg-balance-positive-bg text-balance-positive shrink-0"><span class="material-symbols-outlined text-[12px] leading-none">meeting_room</span><span class="font-label-caps text-label-caps uppercase">Room 302</span></div></div><span class="font-label-sm text-label-sm text-text-secondary truncate">Balances</span></div></div><div class="flex items-center gap-space-xs"><button aria-label="Notifications" class="w-11 h-11 rounded-full flex items-center justify-center text-text-secondary hover:text-text-primary hover:bg-surface-subtle transition-colors" type="button"><span class="material-symbols-outlined text-[22px]">notifications</span></button><button aria-label="User Profile" class="w-11 h-11 flex items-center justify-center" type="button"><img alt="Profile" class="w-8 h-8 rounded-full object-cover shadow-[0_2px_6px_rgba(15,23,42,0.1)]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCRw1K9cRjgccKoi-VWaKXi_o5DahLwYxrgA8rpG6EHpQFzVNYdjx2LJ6qJlR_3l_3X4-1QA_TM8f1g28GFoIqwVW5Ttlmv-6mjrEAv6Dp1LL_zjsShov1eDXD0-yoW13m0vYjM1l_cy7Zlhxew8f7conXpFI_j7RK-ZuYz-tnFISoIVoW2bC-BS2aziVjvdLmL49a1w1i47Q4xmzaLA_4kQxYpSecQ2KAMPNyMX9azc85EHfXd74w"/></button></div></div></header><main class="flex-1 w-full bg-surface pt-16 pb-28 px-margin-mobile flex flex-col"><div class="flex flex-col w-full space-y-5">
+<!-- Active Tab Synchronizer Script -->
+<script>
+    (function syncTab() {
+      const activeNav = document.querySelector('nav a[data-path="balances"]');
+      if (activeNav) {
+        document.querySelectorAll('nav a').forEach(el => {
+          el.classList.remove('text-balance-positive', 'font-label-md');
+          el.classList.add('text-text-muted');
+        });
+        activeNav.classList.remove('text-text-muted');
+        activeNav.classList.add('text-balance-positive', 'font-label-md');
+      }
+    })();
+  </script>
+<!-- Group Summary & Net Standing Card -->
+<section class="bg-surface-card rounded-3xl p-5 shadow-[0_4px_20px_-2px_rgba(15,23,42,0.06)] relative overflow-hidden">
+<div class="absolute -right-10 -top-10 w-36 h-36 bg-balance-positive/10 rounded-full blur-2xl pointer-events-none"></div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-balance-positive text-[20px]">account_balance_wallet</span>
+<span class="font-headline-sm text-headline-sm text-text-primary">Room 302 Balances</span>
+</div>
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-balance-positive-bg text-balance-positive font-label-caps text-label-caps">
+<span class="w-1.5 h-1.5 rounded-full bg-balance-positive animate-pulse"></span>
+        Optimized Net
+      </span>
+</div>
+<!-- Main Net Display -->
+<div class="mt-4 mb-5">
+<span class="font-label-sm text-label-sm text-text-secondary block">Overall Balance</span>
+<div class="flex items-baseline gap-2 mt-1">
+<h1 class="font-currency-display text-currency-display text-balance-positive tracking-tight">+₹500.00</h1>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full bg-balance-positive-bg text-balance-positive font-label-caps text-label-caps">
+          You are owed money
+        </span>
+</div>
+</div>
+<!-- Micro Split Stat Metric Bento -->
+<div class="grid grid-cols-2 gap-3 pt-4 border-t-0 bg-surface-subtle/70 p-3 rounded-2xl">
+<div class="flex flex-col gap-0.5">
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-balance-positive"></span>
+<span class="font-label-sm text-label-sm text-text-secondary">You are owed</span>
+</div>
+<span class="font-headline-sm text-headline-sm text-balance-positive">₹850.00</span>
+</div>
+<div class="flex flex-col gap-0.5">
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-balance-negative"></span>
+<span class="font-label-sm text-label-sm text-text-secondary">You owe</span>
+</div>
+<span class="font-headline-sm text-headline-sm text-balance-negative">₹350.00</span>
+</div>
+</div>
+</section>
+<!-- Roommate Debts & Balances Section -->
+<section class="flex flex-col space-y-3">
+<div class="flex items-center justify-between px-1">
+<h2 class="font-headline-sm text-headline-sm text-text-primary">Roommate Debts</h2>
+<span class="font-label-sm text-label-sm text-text-secondary">3 Active Splits</span>
+</div>
+<!-- Card 1: Aman Verma (Owes You) -->
+<div class="bg-surface-card rounded-3xl p-4 shadow-[0_2px_12px_rgba(15,23,42,0.04)] flex flex-col gap-3.5 transition-all">
+<div class="flex items-start justify-between gap-3">
+<div class="flex items-center gap-3 min-w-0">
+<div class="relative w-12 h-12 rounded-full overflow-hidden shrink-0 shadow-sm">
+<img class="w-full h-full object-cover" data-alt="Warm cinematic headshot of young Indian tech professional Aman Verma smiling in natural bright sunlight, wearing a casual minimal collared shirt, photorealistic portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAIbvYYtYNznqgx79mrP5OI4BKEBGOEkf1Kpp9WkaVQq1oVbpdgwKHlHqHBmRdfZlkm43i1YCUCfln4aCBOfMfJR0ypclvz-th52Y0VFg58nBEprlYmwH8UHpYXCaemvqu5V2GYPVdM33sC1LSYGtrmqBjniOFztoRJVdPd_j2qSlm_5XmomPnAVqiE8xR_Ccd7xKAnJekhdaasraMaxp9hFb9XyGXcpa4_mJYdG6WYOftm1iLKJY4"/>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-1.5">
+<span class="font-headline-sm text-headline-sm text-text-primary truncate">Aman Verma</span>
+<span class="w-1.5 h-1.5 rounded-full bg-balance-positive shrink-0"></span>
+</div>
+<span class="font-body-sm text-body-sm text-text-muted truncate">aman@example.com</span>
+</div>
+</div>
+<div class="text-right shrink-0">
+<span class="font-label-caps text-label-caps text-balance-positive uppercase block">Owes you</span>
+<span class="font-headline-md text-headline-md text-balance-positive">+₹450.00</span>
+</div>
+</div>
+<!-- Expense breakdown pill tag -->
+<div class="bg-surface-subtle px-3 py-2 rounded-xl flex items-center gap-2 text-text-secondary">
+<span class="material-symbols-outlined text-[16px] text-text-muted">receipt</span>
+<span class="font-body-sm text-body-sm truncate">Swiggy Dinner (+₹250), Groceries (+₹200)</span>
+</div>
+<!-- Action Buttons -->
+<div class="grid grid-cols-2 gap-2 pt-1">
+<button class="h-11 px-3 rounded-2xl bg-surface-subtle text-text-primary font-label-md text-label-md flex items-center justify-center gap-1.5 active:scale-[0.98] transition-transform" onclick="triggerToast('WhatsApp reminder sent to Aman!')" type="button">
+<span class="material-symbols-outlined text-[18px] text-balance-positive">chat</span>
+<span>Remind</span>
+</button>
+<button class="h-11 px-3 rounded-2xl bg-balance-positive text-on-primary font-label-md text-label-md flex items-center justify-center gap-1 shadow-[0_6px_16px_-3px_rgba(5,150,105,0.35)] active:scale-[0.98] transition-transform" onclick="triggerToast('Settlement recorded with Aman')" type="button">
+<span class="material-symbols-outlined text-[18px]">check_circle</span>
+<span>Record Settled</span>
+</button>
+</div>
+</div>
+<!-- Card 2: Rahul Sharma (Owes You) -->
+<div class="bg-surface-card rounded-3xl p-4 shadow-[0_2px_12px_rgba(15,23,42,0.04)] flex flex-col gap-3.5 transition-all">
+<div class="flex items-start justify-between gap-3">
+<div class="flex items-center gap-3 min-w-0">
+<div class="relative w-12 h-12 rounded-full overflow-hidden shrink-0 shadow-sm">
+<img class="w-full h-full object-cover" data-alt="Portrait of Rahul Sharma, modern young creative professional smiling with soft daylighting, slate green soft studio background, warm authentic expression" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCmTfeFeDtgu6n52voJjr46WH_XTtuvT0NKC2LM8-v3RX_oZpIiaHNp7NoeTpufnWEc97x96ZWNnIyF01FiwVS0rKBFnHqoGXNtpJsT1huS-8Mnsp_-CYF0nnwitZazmFDH5BnNOyPUUPW6dNfHeUzgz1yi2Y_jEYVf0cXf0MTh6ndVuJUCPTGAD0flms5o5dbj7WnqO0_N9ZURySUNCn6bFMNeH3_WeLVc7QVAyS0imxy0iIkzyFE"/>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-1.5">
+<span class="font-headline-sm text-headline-sm text-text-primary truncate">Rahul Sharma</span>
+<span class="w-1.5 h-1.5 rounded-full bg-balance-positive shrink-0"></span>
+</div>
+<span class="font-body-sm text-body-sm text-text-muted truncate">rahul@example.com</span>
+</div>
+</div>
+<div class="text-right shrink-0">
+<span class="font-label-caps text-label-caps text-balance-positive uppercase block">Owes you</span>
+<span class="font-headline-md text-headline-md text-balance-positive">+₹300.00</span>
+</div>
+</div>
+<!-- Expense breakdown pill tag -->
+<div class="bg-surface-subtle px-3 py-2 rounded-xl flex items-center gap-2 text-text-secondary">
+<span class="material-symbols-outlined text-[16px] text-text-muted">receipt</span>
+<span class="font-body-sm text-body-sm truncate">Electricity Bill (+₹450) − Swiggy (-₹150)</span>
+</div>
+<!-- Action Buttons -->
+<div class="grid grid-cols-2 gap-2 pt-1">
+<button class="h-11 px-3 rounded-2xl bg-surface-subtle text-text-primary font-label-md text-label-md flex items-center justify-center gap-1.5 active:scale-[0.98] transition-transform" onclick="triggerToast('WhatsApp nudge pinged to Rahul!')" type="button">
+<span class="material-symbols-outlined text-[18px] text-balance-positive">chat</span>
+<span>Remind</span>
+</button>
+<button class="h-11 px-3 rounded-2xl bg-balance-positive text-on-primary font-label-md text-label-md flex items-center justify-center gap-1 shadow-[0_6px_16px_-3px_rgba(5,150,105,0.35)] active:scale-[0.98] transition-transform" onclick="triggerToast('Settlement recorded with Rahul')" type="button">
+<span class="material-symbols-outlined text-[18px]">check_circle</span>
+<span>Record Settled</span>
+</button>
+</div>
+</div>
+<!-- Card 3: Priya Patel (You Owe) -->
+<div class="bg-surface-card rounded-3xl p-4 shadow-[0_2px_12px_rgba(15,23,42,0.04)] flex flex-col gap-3.5 transition-all">
+<div class="flex items-start justify-between gap-3">
+<div class="flex items-center gap-3 min-w-0">
+<div class="relative w-12 h-12 rounded-full overflow-hidden shrink-0 shadow-sm">
+<img class="w-full h-full object-cover" data-alt="Portrait photo of young Indian female Priya Patel with gentle warm expression, minimal aesthetic, soft natural indoor home lighting, contemporary fintech profile image" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC6IFv2p2ivl2ROLwUw-1_xquh7b_GJWVMD8MdQ_6hzBuYxDHx5PEC7_S-KcxKfPfPmgUy4f7yK7kVZILBJWkMjFIhSzvzqKST7-rWKacR4R2KThGaQiozPiU2ymSoJtUGFHDXrHCRzB5NmoOev-GTPXKArYL89LvXj70fwuTFJ4XSjHYB6nWwKzrAgmqkdszpjwiG2qPkNwFMPOQV05CafaqmPvfMj2lhTDBhy9wiIL3VJo_wDd0c"/>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-1.5">
+<span class="font-headline-sm text-headline-sm text-text-primary truncate">Priya Patel</span>
+<span class="w-1.5 h-1.5 rounded-full bg-balance-negative shrink-0"></span>
+</div>
+<span class="font-body-sm text-body-sm text-text-muted truncate">priya@example.com</span>
+</div>
+</div>
+<div class="text-right shrink-0">
+<span class="font-label-caps text-label-caps text-balance-negative uppercase block">You owe</span>
+<span class="font-headline-md text-headline-md text-balance-negative">-₹150.00</span>
+</div>
+</div>
+<!-- Expense breakdown pill tag -->
+<div class="bg-balance-negative-bg/60 px-3 py-2 rounded-xl flex items-center gap-2 text-balance-negative">
+<span class="material-symbols-outlined text-[16px]">local_grocery_store</span>
+<span class="font-body-sm text-body-sm truncate">Groceries share (−₹150.00)</span>
+</div>
+<!-- Action Buttons -->
+<div class="grid grid-cols-2 gap-2 pt-1">
+<button class="h-11 px-3 rounded-2xl bg-primary-container text-on-primary-container font-label-md text-label-md flex items-center justify-center gap-1.5 shadow-[0_6px_16px_-3px_rgba(5,150,105,0.3)] active:scale-[0.98] transition-transform" onclick="openUpiModal()" type="button">
+<span class="material-symbols-outlined text-[18px]">payments</span>
+<span>Settle ₹150</span>
+</button>
+<button class="h-11 px-3 rounded-2xl bg-surface-subtle text-text-primary font-label-md text-label-md flex items-center justify-center gap-1 active:scale-[0.98] transition-transform" onclick="triggerToast('Recorded ₹150 cash payment to Priya')" type="button">
+<span class="material-symbols-outlined text-[18px] text-text-secondary">price_check</span>
+<span>Record Cash</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Instant UPI Settlement Card Preview -->
+<section class="bg-gradient-to-br from-surface-card via-surface-card to-surface-container-low rounded-3xl p-4 shadow-[0_4px_20px_rgba(15,23,42,0.05)] flex flex-col gap-3">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-xl bg-balance-positive-bg text-balance-positive flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">qr_code_scanner</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-text-primary leading-tight">Quick UPI Pay</h3>
+<span class="font-body-sm text-body-sm text-text-secondary">GPay • PhonePe • Paytm</span>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded-full bg-surface-subtle text-text-secondary font-label-caps text-label-caps uppercase">0% Fee</span>
+</div>
+<!-- Settlement Details Cardlet -->
+<div class="bg-surface-subtle/80 p-3.5 rounded-2xl flex items-center justify-between gap-3">
+<div class="flex items-center gap-3 min-w-0">
+<div class="w-12 h-12 rounded-xl bg-surface-card p-1.5 flex items-center justify-center shrink-0 shadow-sm">
+<!-- Simplified inline SVG QR pattern -->
+<svg class="w-full h-full text-text-primary fill-current" viewbox="0 0 24 24">
+<path d="M3 3h8v8H3V3zm2 2v4h4V5H5zm8-2h8v8h-8V3zm2 2v4h4V5h-4zM3 13h8v8H3v-8zm2 2v4h4v-4H5zm13-2h3v2h-3v-2zm-5 0h2v3h-2v-3zm3 3h2v2h-2v-2zm-3 2h3v3h-3v-3zm5 0h3v3h-3v-3z"></path>
+</svg>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md text-text-primary truncate">Priya Patel</span>
+<span class="font-body-sm text-body-sm text-text-muted truncate">priya@okhdfcbank</span>
+</div>
+</div>
+<div class="text-right shrink-0">
+<span class="font-label-caps text-label-caps text-text-secondary uppercase block">Amount</span>
+<span class="font-headline-sm text-headline-sm text-text-primary">₹150.00</span>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="flex-1 h-12 rounded-2xl bg-balance-positive text-on-primary font-label-md text-label-md flex items-center justify-center gap-2 shadow-[0_8px_20px_-4px_rgba(5,150,105,0.4)] active:scale-[0.98] transition-transform" onclick="simulateUpiSuccess()" type="button">
+<span class="material-symbols-outlined text-[20px]">send</span>
+<span>Pay ₹150 via UPI</span>
+</button>
+<button aria-label="Copy UPI ID" class="w-12 h-12 rounded-2xl bg-surface-subtle text-text-primary flex items-center justify-center shrink-0 active:scale-95 transition-transform" onclick="triggerToast('Copied priya@okhdfcbank')" type="button">
+<span class="material-symbols-outlined text-[20px]">content_copy</span>
+</button>
+</div>
+</section>
+<!-- Recent Settlement History Section -->
+<section class="flex flex-col space-y-3 pb-2">
+<div class="flex items-center justify-between px-1">
+<h2 class="font-headline-sm text-headline-sm text-text-primary">Recent Settlements</h2>
+<a class="font-label-sm text-label-sm text-balance-positive hover:underline" href="#">View All</a>
+</div>
+<div class="bg-surface-card rounded-3xl p-3.5 shadow-[0_2px_12px_rgba(15,23,42,0.04)] flex flex-col space-y-3">
+<!-- Item 1 -->
+<div class="flex items-center justify-between gap-3 p-1.5">
+<div class="flex items-center gap-3 min-w-0">
+<div class="w-10 h-10 rounded-full bg-balance-positive-bg text-balance-positive flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[20px]">check_circle</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md text-text-primary truncate">Rahul paid Ankush</span>
+<div class="flex items-center gap-1.5 text-text-muted">
+<span class="font-body-sm text-body-sm">Mar 18</span>
+<span class="w-1 h-1 rounded-full bg-text-muted/60"></span>
+<span class="font-body-sm text-body-sm text-balance-positive flex items-center gap-0.5">
+                via GPay
+                <span class="material-symbols-outlined text-[14px]">verified</span>
+</span>
+</div>
+</div>
+</div>
+<div class="text-right shrink-0">
+<span class="font-headline-sm text-headline-sm text-balance-positive">₹600.00</span>
+<span class="font-label-caps text-label-caps text-text-muted uppercase block">Settled</span>
+</div>
+</div>
+<!-- Subtle divider line alternative via background -->
+<div class="h-px bg-surface-subtle w-full"></div>
+<!-- Item 2 -->
+<div class="flex items-center justify-between gap-3 p-1.5">
+<div class="flex items-center gap-3 min-w-0">
+<div class="w-10 h-10 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[20px]">payments</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md text-text-primary truncate">Ankush paid Priya</span>
+<div class="flex items-center gap-1.5 text-text-muted">
+<span class="font-body-sm text-body-sm">Mar 10</span>
+<span class="w-1 h-1 rounded-full bg-text-muted/60"></span>
+<span class="font-body-sm text-body-sm text-text-secondary flex items-center gap-0.5">
+                via Cash
+                <span class="material-symbols-outlined text-[14px]">done_all</span>
+</span>
+</div>
+</div>
+</div>
+<div class="text-right shrink-0">
+<span class="font-headline-sm text-headline-sm text-text-primary">₹450.00</span>
+<span class="font-label-caps text-label-caps text-text-muted uppercase block">Settled</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Interactive UPI Quick Settlement Modal / Sheet -->
+<div class="hidden fixed inset-0 z-50 bg-inverse-surface/40 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4 transition-opacity" id="upiModal">
+<div class="w-full max-w-md bg-surface-card rounded-t-3xl sm:rounded-3xl p-6 shadow-2xl space-y-4 animate-in fade-in slide-in-from-bottom duration-200">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-9 h-9 rounded-full bg-balance-positive-bg text-balance-positive flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">send_money</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-text-primary">UPI Payment</h3>
+</div>
+<button class="w-9 h-9 rounded-full bg-surface-subtle flex items-center justify-center text-text-secondary hover:text-text-primary" onclick="closeUpiModal()" type="button">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+<div class="bg-surface-subtle p-4 rounded-2xl flex flex-col items-center text-center space-y-2">
+<span class="font-label-sm text-label-sm text-text-secondary">Paying Roommate</span>
+<span class="font-headline-md text-headline-md text-text-primary">Priya Patel</span>
+<span class="font-currency-display text-currency-display text-balance-negative font-bold">₹150.00</span>
+<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-card shadow-sm text-text-secondary font-body-sm text-body-sm">
+<span>priya@okhdfcbank</span>
+<span class="material-symbols-outlined text-[14px] text-balance-positive">check_circle</span>
+</div>
+</div>
+<div class="grid grid-cols-3 gap-2 py-1">
+<div class="flex flex-col items-center gap-1 p-2 rounded-xl bg-surface-subtle/70">
+<span class="material-symbols-outlined text-balance-positive text-[24px]">smartphone</span>
+<span class="font-label-caps text-label-caps text-text-primary">Google Pay</span>
+</div>
+<div class="flex flex-col items-center gap-1 p-2 rounded-xl bg-surface-subtle/70">
+<span class="material-symbols-outlined text-secondary text-[24px]">account_balance_wallet</span>
+<span class="font-label-caps text-label-caps text-text-primary">PhonePe</span>
+</div>
+<div class="flex flex-col items-center gap-1 p-2 rounded-xl bg-surface-subtle/70">
+<span class="material-symbols-outlined text-primary text-[24px]">credit_card</span>
+<span class="font-label-caps text-label-caps text-text-primary">Paytm</span>
+</div>
+</div>
+<div class="flex flex-col gap-2 pt-2">
+<button class="w-full h-13 py-3 rounded-2xl bg-balance-positive text-on-primary font-label-md text-label-md flex items-center justify-center gap-2 shadow-[0_10px_25px_-5px_rgba(5,150,105,0.4)]" onclick="simulateUpiSuccess()" type="button">
+<span class="material-symbols-outlined text-[20px]">done</span>
+<span>Confirm &amp; Launch UPI App</span>
+</button>
+<button class="w-full py-2.5 text-center font-label-sm text-label-sm text-text-muted hover:text-text-primary" onclick="closeUpiModal()" type="button">
+          Cancel
+        </button>
+</div>
+</div>
+</div>
+<!-- Micro-interaction Toast Notification -->
+<div class="fixed top-20 left-1/2 -translate-x-1/2 z-50 pointer-events-none opacity-0 transition-opacity duration-300" id="toastNotification">
+<div class="px-4 py-2.5 rounded-full bg-text-primary text-on-primary font-label-sm text-label-sm shadow-xl flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-balance-positive">check_circle</span>
+<span id="toastMessage">Success</span>
+</div>
+</div>
+<script>
+    function openUpiModal() {
+      const modal = document.getElementById('upiModal');
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function closeUpiModal() {
+      const modal = document.getElementById('upiModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function simulateUpiSuccess() {
+      closeUpiModal();
+      triggerToast('₹150.00 transferred to Priya successfully!');
+    }
+
+    function triggerToast(text) {
+      const toast = document.getElementById('toastNotification');
+      const msg = document.getElementById('toastMessage');
+      if (toast && msg) {
+        msg.textContent = text;
+        toast.classList.remove('opacity-0');
+        toast.classList.add('opacity-100');
+        setTimeout(() => {
+          toast.classList.remove('opacity-100');
+          toast.classList.add('opacity-0');
+        }, 2600);
+      }
+    }
+  </script>
+</div></main><nav class="fixed bottom-0 inset-x-0 z-50 pb-safe bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_-4px_20px_rgba(15,23,42,0.06)]" data-active-classes="text-balance-positive font-label-md"><div class="flex items-center justify-around h-16 px-space-xs relative max-w-lg mx-auto"><a class="flex flex-col items-center justify-center w-14 h-14 text-text-muted hover:text-text-primary transition-colors" data-path="home" href="#"><span class="material-symbols-outlined text-[22px]">home</span><span class="font-label-sm text-label-sm mt-0.5">Home</span></a><a class="flex flex-col items-center justify-center w-14 h-14 text-text-muted hover:text-text-primary transition-colors" data-path="expenses" href="#"><span class="material-symbols-outlined text-[22px]">receipt_long</span><span class="font-label-sm text-label-sm mt-0.5">Expenses</span></a><div class="flex flex-col items-center justify-center w-14 h-14"><a aria-label="Add Expense" class="absolute -top-5 flex items-center justify-center w-13 h-13 w-[52px] h-[52px] rounded-full bg-balance-positive text-on-primary shadow-[0_10px_25px_-5px_rgba(5,150,105,0.45),0_8px_10px_-6px_rgba(5,150,105,0.2)] active:scale-95 transition-transform" data-path="add-expense" href="#"><span class="material-symbols-outlined text-[28px] leading-none font-bold">add</span></a><span class="font-label-sm text-label-sm text-text-secondary mt-7">Add</span></div><a aria-current="page" class="flex flex-col items-center justify-center w-14 h-14 transition-colors text-balance-positive font-label-md" data-path="balances" href="#"><span class="material-symbols-outlined text-[22px]">account_balance_wallet</span><span class="font-label-sm text-label-sm mt-0.5">Balances</span></a><a class="flex flex-col items-center justify-center w-14 h-14 text-text-muted hover:text-text-primary transition-colors" data-path="activity" href="#"><span class="material-symbols-outlined text-[22px]">notifications_active</span><span class="font-label-sm text-label-sm mt-0.5">Activity</span></a></div></nav></body></html>

@@ -1,0 +1,29 @@
+{
+  "expo": {
+    "name": "FlatLedger",
+    "slug": "flatledger-mobile-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "scheme": "flatledger",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#f7f9fb"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "package": "com.flatledger.mobile",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#f7f9fb"
+      }
+    },
+    "plugins": [
+      "expo-router"
+    ]
+  }
+}

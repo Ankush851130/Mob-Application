@@ -1,0 +1,18 @@
+{
+  "name": "flatledger-backend",
+  "version": "1.0.0",
+  "description": "Node.js Express MongoDB Socket.io Backend for FlatLedger",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "expo-server-sdk": "^3.13.0",
+    "express": "^4.19.2",
+    "mongoose": "^8.3.1",
+    "socket.io": "^4.7.5"
+  }
+}
