@@ -12,14 +12,35 @@ import { useExpenses } from '../../context/ExpenseContext';
 
 export default function ProfileScreen() {
   const router = useRouter();
-  const { currentUser, roomCode, roomName } = useExpenses();
+  const { currentUser, roomCode, roomName, logoutUser } = useExpenses();
 
   const handleLogout = () => {
-    Alert.alert('Sign Out', 'Are you sure you want to sign out?', [
+    Alert.alert('Sign Out', 'Are you sure you want to sign out? All session data will be cleared.', [
       { text: 'Cancel', style: 'cancel' },
-      { text: 'Sign Out', style: 'destructive', onPress: () => router.replace('/(auth)/login') },
+      {
+        text: 'Sign Out',
+        style: 'destructive',
+        onPress: async () => {
+          await logoutUser();
+          router.replace('/(auth)/login');
+        },
+      },
     ]);
   };
+
+  if (!currentUser) {
+    return (
+      <SafeAreaView style={styles.safeArea}>
+        <ScreenHeader title="Account & Profile" />
+        <View style={styles.emptyContainer}>
+          <Text style={styles.userName}>Not Signed In</Text>
+          <TouchableOpacity style={styles.loginBtn} onPress={() => router.replace('/(auth)/login')}>
+            <Text style={styles.loginBtnText}>Go to Sign In</Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -32,10 +53,17 @@ export default function ProfileScreen() {
           <Text style={styles.userName}>{currentUser.name}</Text>
           <Text style={styles.userEmail}>{currentUser.email}</Text>
 
-          <View style={styles.roomTag}>
-            <Ionicons name="business" size={14} color={Colors.balancePositive} />
-            <Text style={styles.roomTagText}>{currentUser.room || 'Room'} • {roomCode}</Text>
-          </View>
+          {roomCode ? (
+            <View style={styles.roomTag}>
+              <Ionicons name="business" size={14} color={Colors.balancePositive} />
+              <Text style={styles.roomTagText}>{roomName || 'Room'} • Key: {roomCode}</Text>
+            </View>
+          ) : (
+            <TouchableOpacity style={styles.joinTag} onPress={() => router.push('/join-room')}>
+              <Ionicons name="add-circle-outline" size={14} color={Colors.balancePositive} />
+              <Text style={styles.roomTagText}>Create or Join a Room</Text>
+            </TouchableOpacity>
+          )}
         </View>
 
         {/* Menu Options Group */}
@@ -46,7 +74,7 @@ export default function ProfileScreen() {
             <View style={styles.menuIconBox}>
               <Ionicons name="people-outline" size={20} color={Colors.primary} />
             </View>
-            <Text style={styles.menuText}>Roommates & {roomName}</Text>
+            <Text style={styles.menuText}>Roommates & {roomName || 'Room'}</Text>
             <Ionicons name="chevron-forward" size={18} color={Colors.textMuted} />
           </TouchableOpacity>
 
@@ -92,6 +120,13 @@ const styles = StyleSheet.create({
     paddingBottom: 90,
     gap: Spacing.md,
   },
+  emptyContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 20,
+    gap: 16,
+  },
   profileCard: {
     backgroundColor: Colors.surfaceCard,
     borderRadius: Radius.r3xl,
@@ -124,6 +159,18 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     borderRadius: Radius.full,
     marginTop: 4,
+  },
+  joinTag: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    backgroundColor: Colors.surfaceSubtle,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: Radius.full,
+    marginTop: 4,
+    borderWidth: 1,
+    borderColor: Colors.borderDelicate,
   },
   roomTagText: {
     ...Typography.labelSm,
@@ -183,5 +230,15 @@ const styles = StyleSheet.create({
   logoutText: {
     ...Typography.labelMd,
     color: Colors.error,
+  },
+  loginBtn: {
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    backgroundColor: Colors.balancePositive,
+    borderRadius: Radius.xl,
+  },
+  loginBtnText: {
+    ...Typography.labelMd,
+    color: Colors.onPrimary,
   },
 });

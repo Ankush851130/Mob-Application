@@ -18,6 +18,7 @@ export interface Expense {
   displayDate: string;
   splits: SplitShare[];
   notes?: string;
+  isSettlement?: boolean;
 }
 
 export const INITIAL_EXPENSES: Expense[] = [

@@ -23,8 +23,8 @@ export default function LoginScreen() {
   const router = useRouter();
   const { loginUser } = useExpenses();
 
-  const [email, setEmail] = useState('ankush@flatledger.app');
-  const [password, setPassword] = useState('password123');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleLogin = async () => {
@@ -35,8 +35,12 @@ export default function LoginScreen() {
 
     setLoading(true);
     try {
-      await loginUser(email);
-      router.replace('/(tabs)');
+      const res = await loginUser(email.trim());
+      if (res.success) {
+        router.replace('/(tabs)');
+      } else {
+        Alert.alert('Sign In Error', res.error || 'Account not found. Please check your email or register.');
+      }
     } catch (err: any) {
       Alert.alert('Sign In Error', err?.message || 'Could not sign in. Please try again.');
     } finally {
@@ -65,6 +69,8 @@ export default function LoginScreen() {
                 style={styles.input}
                 value={email}
                 onChangeText={setEmail}
+                placeholder="you@example.com"
+                placeholderTextColor={Colors.textMuted}
                 keyboardType="email-address"
                 autoCapitalize="none"
               />
@@ -79,6 +85,8 @@ export default function LoginScreen() {
                 style={styles.input}
                 value={password}
                 onChangeText={setPassword}
+                placeholder="••••••••"
+                placeholderTextColor={Colors.textMuted}
                 secureTextEntry
               />
             </View>
@@ -92,7 +100,7 @@ export default function LoginScreen() {
             {loading ? (
               <ActivityIndicator color={Colors.onPrimary} />
             ) : (
-              <Text style={styles.loginBtnText}>Sign In to Flat 302</Text>
+              <Text style={styles.loginBtnText}>Sign In to FlatLedger</Text>
             )}
           </TouchableOpacity>
         </View>

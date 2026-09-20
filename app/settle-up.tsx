@@ -26,16 +26,27 @@ const PAYMENT_METHODS = [
 
 export default function SettleUpScreen() {
   const router = useRouter();
-  const { users, currentUser, recordSettlement, roommateBalances } = useExpenses();
+  const { users, currentUser, recordSettlement, roommateBalances, roomCode } = useExpenses();
 
-  const otherUsers = users.filter((u) => u.id !== currentUser.id);
+  const activeUserId = currentUser?.id || '';
+  const otherUsers = users.filter((u) => u.id !== activeUserId);
+
   const [selectedPayeeId, setSelectedPayeeId] = useState(otherUsers[0]?.id || '');
-  const [amount, setAmount] = useState('350');
+  const [amount, setAmount] = useState('300');
   const [selectedMethod, setSelectedMethod] = useState('upi');
 
   const selectedPayee = users.find((u) => u.id === selectedPayeeId) || otherUsers[0];
 
   const handleRecord = () => {
+    if (!currentUser) {
+      Alert.alert('Authentication Error', 'You must be signed in.');
+      return;
+    }
+    if (!selectedPayee) {
+      Alert.alert('Selection Error', 'Please select a roommate to settle payment with.');
+      return;
+    }
+
     const parsedAmount = parseFloat(amount) || 0;
     if (parsedAmount <= 0) {
       Alert.alert('Invalid Amount', 'Please enter a settlement amount greater than 0.');
@@ -51,6 +62,32 @@ export default function SettleUpScreen() {
     );
     router.back();
   };
+
+  if (otherUsers.length === 0) {
+    return (
+      <SafeAreaView style={styles.safeArea}>
+        <View style={styles.topHeader}>
+          <TouchableOpacity style={styles.headerBtn} onPress={() => router.back()}>
+            <Ionicons name="close" size={20} color={Colors.textSecondary} />
+            <Text style={styles.headerBtnText}>Close</Text>
+          </TouchableOpacity>
+          <Text style={styles.headerTitle}>Settle Up Debts</Text>
+          <View style={{ width: 40 }} />
+        </View>
+
+        <View style={styles.emptyCardContainer}>
+          <Ionicons name="people-outline" size={48} color={Colors.textMuted} />
+          <Text style={styles.emptyTitle}>No Other Roommates Yet</Text>
+          <Text style={styles.emptySub}>
+            Share your Room Key <Text style={{ fontWeight: 'bold' }}>{roomCode}</Text> with your flatmates so they can join this room.
+          </Text>
+          <TouchableOpacity style={styles.inviteBtn} onPress={() => router.push('/roommates')}>
+            <Text style={styles.inviteBtnText}>Share Room Key ({roomCode})</Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -116,7 +153,7 @@ export default function SettleUpScreen() {
               placeholder="0.00"
             />
           </View>
-          <Text style={styles.amountSubtext}>Paying to {selectedPayee.name}</Text>
+          <Text style={styles.amountSubtext}>Paying to {selectedPayee?.name || 'Roommate'}</Text>
         </View>
 
         {/* Payment Method */}
@@ -296,6 +333,33 @@ const styles = StyleSheet.create({
   },
   confirmBtnText: {
     ...Typography.headlineSm,
+    color: Colors.onPrimary,
+  },
+  emptyCardContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: Spacing.xl,
+    gap: Spacing.md,
+  },
+  emptyTitle: {
+    ...Typography.headlineMd,
+    color: Colors.textPrimary,
+  },
+  emptySub: {
+    ...Typography.bodyMd,
+    color: Colors.textSecondary,
+    textAlign: 'center',
+  },
+  inviteBtn: {
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    backgroundColor: Colors.balancePositive,
+    borderRadius: Radius.xl,
+    marginTop: 8,
+  },
+  inviteBtnText: {
+    ...Typography.labelMd,
     color: Colors.onPrimary,
   },
 });

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -15,31 +15,53 @@ export default function JoinRoomScreen() {
   const [inputCode, setInputCode] = useState('');
   const [newRoomName, setNewRoomName] = useState('');
   const [mode, setMode] = useState<'join' | 'create'>('join');
+  const [loading, setLoading] = useState(false);
 
   const handleJoin = async () => {
     if (!inputCode.trim()) {
-      Alert.alert('Room Code Required', 'Please enter a 6-character room code.');
+      Alert.alert('Room Key Required', 'Please enter a 6-character room key (e.g. AB12CD).');
       return;
     }
 
-    const success = await joinFlatRoom(inputCode.trim());
-    if (success) {
-      Alert.alert('Success 🎉', `Connected to Room ${inputCode.toUpperCase()}!`);
-      router.back();
-    } else {
-      Alert.alert('Error ❌', 'Invalid room code. Please try again.');
+    setLoading(true);
+    try {
+      const res = await joinFlatRoom(inputCode.trim());
+      if (res.success) {
+        Alert.alert('Joined Flat Room! 🎉', `You are now a member of Room ${inputCode.trim().toUpperCase()}`);
+        router.back();
+      } else {
+        Alert.alert('Join Error ❌', res.error || 'Invalid room key. Please check the code and try again.');
+      }
+    } catch (err: any) {
+      Alert.alert('Error', err?.message || 'Could not join room.');
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleCreate = async () => {
     if (!newRoomName.trim()) {
-      Alert.alert('Flat Name Required', 'Please enter a name for your flat (e.g. Flat 302).');
+      Alert.alert('Flat Name Required', 'Please enter a name for your flat (e.g. Flatmates, Flat 302).');
       return;
     }
 
-    const createdCode = await createFlatRoom(newRoomName.trim());
-    Alert.alert('Flat Room Created! 🏡', `Your Room Code is: ${createdCode}. Share this code with your 2 flatmates!`);
-    router.back();
+    setLoading(true);
+    try {
+      const res = await createFlatRoom(newRoomName.trim());
+      if (res.success && res.code) {
+        Alert.alert(
+          'Room Created! 🏡',
+          `Room "${newRoomName.trim()}" created successfully!\n\nYour Room Key is: ${res.code}\n\nShare this Room Key with your flatmates so they can join!`,
+          [{ text: 'Great!', onPress: () => router.back() }]
+        );
+      } else {
+        Alert.alert('Create Error ❌', res.error || 'Could not create flat room.');
+      }
+    } catch (err: any) {
+      Alert.alert('Error', err?.message || 'Could not create room.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -76,20 +98,24 @@ export default function JoinRoomScreen() {
 
         {mode === 'join' ? (
           <View style={[styles.card, Theme.shadows.subtle]}>
-            <Text style={styles.label}>ENTER 6-CHARACTER ROOM CODE</Text>
+            <Text style={styles.label}>ENTER 6-CHARACTER ROOM KEY</Text>
             <TextInput
               style={styles.input}
-              placeholder="e.g. FLAT30"
+              placeholder="e.g. AB12CD"
               placeholderTextColor={Colors.textMuted}
               value={inputCode}
               onChangeText={setInputCode}
               autoCapitalize="characters"
               maxLength={8}
             />
-            <Text style={styles.hint}>Current Room: {roomCode}</Text>
+            {roomCode ? <Text style={styles.hint}>Current Room Key: {roomCode}</Text> : null}
 
-            <TouchableOpacity style={styles.primaryBtn} onPress={handleJoin}>
-              <Text style={styles.primaryBtnText}>Join Flat Room</Text>
+            <TouchableOpacity style={styles.primaryBtn} onPress={handleJoin} disabled={loading}>
+              {loading ? (
+                <ActivityIndicator color={Colors.onPrimary} />
+              ) : (
+                <Text style={styles.primaryBtnText}>Join Flat Room</Text>
+              )}
             </TouchableOpacity>
           </View>
         ) : (
@@ -97,14 +123,18 @@ export default function JoinRoomScreen() {
             <Text style={styles.label}>FLAT / ROOM NAME</Text>
             <TextInput
               style={styles.input}
-              placeholder="e.g. Apartment 302 Roommates"
+              placeholder="e.g. Flatmates, Apartment 302"
               placeholderTextColor={Colors.textMuted}
               value={newRoomName}
               onChangeText={setNewRoomName}
             />
 
-            <TouchableOpacity style={styles.primaryBtn} onPress={handleCreate}>
-              <Text style={styles.primaryBtnText}>Create New Room</Text>
+            <TouchableOpacity style={styles.primaryBtn} onPress={handleCreate} disabled={loading}>
+              {loading ? (
+                <ActivityIndicator color={Colors.onPrimary} />
+              ) : (
+                <Text style={styles.primaryBtnText}>Create New Room</Text>
+              )}
             </TouchableOpacity>
           </View>
         )}

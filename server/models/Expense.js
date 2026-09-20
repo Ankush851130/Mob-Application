@@ -18,7 +18,10 @@ const expenseSchema = new mongoose.Schema({
   date: { type: String, required: true },
   displayDate: { type: String, required: true },
   splits: [splitSchema],
+  splitType: { type: String, default: 'equal' }, // 'equal' | 'custom' | 'percentage'
+  isSettlement: { type: Boolean, default: false },
   notes: { type: String },
 }, { timestamps: true });
 
 module.exports = mongoose.model('Expense', expenseSchema);
+

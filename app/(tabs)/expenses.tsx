@@ -12,7 +12,6 @@ import { CategoryChip } from '../../components/CategoryChip';
 import { ExpenseCard } from '../../components/ExpenseCard';
 import { EmptyState } from '../../components/EmptyState';
 import { useExpenses } from '../../context/ExpenseContext';
-import { CURRENT_USER } from '../../data/mockUsers';
 
 const CATEGORIES = [
   { id: 'all', label: 'All' },
@@ -25,9 +24,11 @@ const CATEGORIES = [
 
 export default function ExpensesScreen() {
   const router = useRouter();
-  const { expenses, currentUser } = useExpenses();
+  const { expenses, currentUser, roomCode } = useExpenses();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
+
+  const activeUserId = currentUser?.id || '';
 
   // Filter expenses based on search and category
   const filteredExpenses = useMemo(() => {
@@ -40,10 +41,10 @@ export default function ExpensesScreen() {
       if (!matchesSearch) return false;
 
       if (selectedCategory === 'all') return true;
-      if (selectedCategory === 'my_paid') return exp.paidById === currentUser.id;
+      if (selectedCategory === 'my_paid') return exp.paidById === activeUserId;
       return exp.category === selectedCategory;
     });
-  }, [expenses, searchQuery, selectedCategory, currentUser.id]);
+  }, [expenses, searchQuery, selectedCategory, activeUserId]);
 
   const { categoryStats, totalMonthlySpend } = useMemo(() => {
     const total = expenses.reduce((sum, item) => sum + item.amount, 0);
@@ -77,7 +78,7 @@ export default function ExpensesScreen() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScreenHeader
-        title="Expenses History"
+        title={`Expenses • ${roomCode || 'Flat'}`}
         onNotificationPress={() => router.push('/activity')}
         onProfilePress={() => router.push('/profile')}
       />

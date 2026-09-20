@@ -3,8 +3,6 @@ import Constants from 'expo-constants';
 import { Expense } from '../data/mockExpenses';
 import { User } from '../data/mockUsers';
 
-// Dynamic server URL resolution: automatically detects local computer IP in Expo Go development,
-// or falls back to production Render backend URL.
 const getBackendUrl = () => {
   if (process.env.EXPO_PUBLIC_API_URL) {
     return process.env.EXPO_PUBLIC_API_URL;
@@ -34,22 +32,41 @@ export const getSocket = (): Socket => {
   return socket;
 };
 
-// Safe fetch with 25s timeout to allow Render free tier cold starts without aborting
+export const disconnectSocket = () => {
+  if (socket) {
+    socket.disconnect();
+    socket = null;
+  }
+};
+
 async function safeFetch(url: string, options: RequestInit = {}, timeoutMs = 25000) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
   try {
     const res = await fetch(url, { ...options, signal: controller.signal });
     clearTimeout(timer);
+    const data = await res.json().catch(() => ({}));
     if (!res.ok) {
-      return { success: false, error: `HTTP ${res.status}` };
+      return { success: false, error: data.error || `HTTP Error ${res.status}` };
     }
-    return await res.json();
+    return data;
   } catch (err: any) {
     clearTimeout(timer);
     console.warn(`API SafeFetch Warning (${url}):`, err?.message || err);
-    return { success: false, error: err?.message || 'Network error' };
+    return { success: false, error: err?.message || 'Network request failed' };
   }
+}
+
+export interface ActivityNotification {
+  id: string;
+  roomCode: string;
+  type: string;
+  title: string;
+  body: string;
+  actorId?: string;
+  actorName?: string;
+  categoryEmoji?: string;
+  createdAt: string;
 }
 
 export const apiService = {
@@ -69,8 +86,16 @@ export const apiService = {
     });
   },
 
-  async fetchRoomExpenses(code: string) {
-    return await safeFetch(`${SERVER_URL}/api/rooms/${code}`);
+  async fetchRoomExpenses(code: string, userId: string) {
+    return await safeFetch(`${SERVER_URL}/api/rooms/${code}?userId=${encodeURIComponent(userId)}`, {
+      headers: { 'x-user-id': userId },
+    });
+  },
+
+  async fetchRoomNotifications(code: string, userId: string) {
+    return await safeFetch(`${SERVER_URL}/api/rooms/${code}/notifications?userId=${encodeURIComponent(userId)}`, {
+      headers: { 'x-user-id': userId },
+    });
   },
 
   async addExpense(expense: Expense & { roomCode: string }) {
@@ -97,12 +122,11 @@ export const apiService = {
     });
   },
 
-  async recordSettlement(roomCode: string, settlementExpense: Expense) {
+  async recordSettlement(roomCode: string, settlementExpense: Expense, userId: string) {
     return await safeFetch(`${SERVER_URL}/api/settlements`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ roomCode, settlementExpense }),
+      body: JSON.stringify({ roomCode, settlementExpense, userId }),
     });
   },
 };
-

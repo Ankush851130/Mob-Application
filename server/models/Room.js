@@ -7,9 +7,12 @@ const roomSchema = new mongoose.Schema({
   members: [{
     id: String,
     name: String,
+    email: String,
     avatar: String,
+    phone: String,
     pushToken: String,
   }],
 }, { timestamps: true });
 
 module.exports = mongoose.model('Room', roomSchema);
+

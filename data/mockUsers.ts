@@ -6,6 +6,8 @@ export interface User {
   email: string;
   phone?: string;
   room?: string;
+  roomId?: string;
+  rooms?: string[];
   pushToken?: string;
 }
 

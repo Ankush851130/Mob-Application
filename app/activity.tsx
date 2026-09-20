@@ -12,11 +12,21 @@ import { useExpenses } from '../context/ExpenseContext';
 
 export default function ActivityScreen() {
   const router = useRouter();
-  const { expenses, roomCode } = useExpenses();
+  const { notifications, expenses, roomCode } = useExpenses();
+
+  const displayItems = notifications.length > 0
+    ? notifications
+    : expenses.map((e) => ({
+        id: e.id,
+        title: e.title,
+        body: `${e.paidByName} logged ₹${e.amount}`,
+        categoryEmoji: e.categoryEmoji,
+        createdAt: e.date,
+      }));
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <ScreenHeader title={`Activity Log • ${roomCode}`} showBack onBackPress={() => router.back()} />
+      <ScreenHeader title={`Activity Log • ${roomCode || 'Flat'}`} showBack onBackPress={() => router.back()} />
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         <View style={[styles.card, Theme.shadows.subtle]}>
@@ -24,35 +34,32 @@ export default function ActivityScreen() {
             <Ionicons name="notifications" size={20} color={Colors.balancePositive} />
             <Text style={styles.cardTitle}>Live Roommate Activity Feed</Text>
           </View>
-          <Text style={styles.cardSub}>Real-time updates and push notification history for Room {roomCode}</Text>
+          <Text style={styles.cardSub}>
+            {roomCode
+              ? `Real-time notifications and action history for Room Key ${roomCode}`
+              : 'Connect to a flat room to view room activity history'}
+          </Text>
         </View>
 
         <Text style={styles.sectionHeader}>RECENT NOTIFICATIONS</Text>
 
-        {expenses.length === 0 ? (
+        {displayItems.length === 0 ? (
           <View style={styles.emptyCard}>
+            <Ionicons name="notifications-off-outline" size={32} color={Colors.textMuted} />
             <Text style={styles.emptyText}>No recent roommate activity yet.</Text>
           </View>
         ) : (
-          expenses.map((item) => (
-            <TouchableOpacity
-              key={item.id}
-              style={[styles.activityItem, Theme.shadows.subtle]}
-              onPress={() => router.push(`/expense/${item.id}`)}
-            >
+          displayItems.map((item) => (
+            <View key={item.id} style={[styles.activityItem, Theme.shadows.subtle]}>
               <View style={styles.iconCircle}>
-                <Text style={styles.emoji}>{item.categoryEmoji}</Text>
+                <Text style={styles.emoji}>{item.categoryEmoji || '🔔'}</Text>
               </View>
 
               <View style={styles.itemContent}>
                 <Text style={styles.itemTitle}>{item.title}</Text>
-                <Text style={styles.itemSub}>
-                  {item.paidByName} logged ₹{item.amount} • {item.displayDate}
-                </Text>
+                <Text style={styles.itemSub}>{item.body}</Text>
               </View>
-
-              <Text style={styles.amountText}>₹{item.amount}</Text>
-            </TouchableOpacity>
+            </View>
           ))
         )}
       </ScrollView>
@@ -97,8 +104,9 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   emptyCard: {
-    padding: 30,
+    padding: 40,
     alignItems: 'center',
+    gap: 8,
   },
   emptyText: {
     ...Typography.bodyMd,
@@ -136,9 +144,5 @@ const styles = StyleSheet.create({
     ...Typography.bodySm,
     color: Colors.textSecondary,
     marginTop: 2,
-  },
-  amountText: {
-    ...Typography.headlineSm,
-    color: Colors.textPrimary,
   },
 });

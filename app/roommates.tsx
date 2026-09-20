@@ -15,12 +15,12 @@ export default function RoommatesScreen() {
   const { users, currentUser, roomCode, roomName } = useExpenses();
 
   const handleAddRoommate = () => {
-    Alert.alert('Room Invite Code 📩', `Share code [ ${roomCode} ] with your 2 flatmates so they can connect instantly!`);
+    Alert.alert('Room Key 🔑', `Share Room Key [ ${roomCode} ] with your flatmates so they can connect instantly!`);
   };
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <ScreenHeader title={`Roommates • ${roomCode}`} showBack onBackPress={() => router.back()} />
+      <ScreenHeader title={`Roommates • ${roomCode || 'Flat'}`} showBack onBackPress={() => router.back()} />
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         {/* Flat Overview Header */}
@@ -29,35 +29,46 @@ export default function RoommatesScreen() {
             <Ionicons name="home" size={16} color={Colors.balancePositive} />
             <Text style={styles.groupBadgeText}>LIVE HOUSEHOLD</Text>
           </View>
-          <Text style={styles.title}>{roomName}</Text>
-          <Text style={styles.subtitle}>{users.length} active flatmates • Room Code: {roomCode}</Text>
+          <Text style={styles.title}>{roomName || 'Flat Room'}</Text>
+          <Text style={styles.subtitle}>{users.length} active flatmate{users.length === 1 ? '' : 's'} • Room Key: {roomCode || 'None'}</Text>
 
-          <TouchableOpacity style={styles.inviteBtn} onPress={handleAddRoommate}>
-            <Ionicons name="person-add-outline" size={16} color={Colors.onPrimary} />
-            <Text style={styles.inviteBtnText}>Share Room Code ({roomCode})</Text>
-          </TouchableOpacity>
+          {roomCode ? (
+            <TouchableOpacity style={styles.inviteBtn} onPress={handleAddRoommate}>
+              <Ionicons name="key-outline" size={16} color={Colors.onPrimary} />
+              <Text style={styles.inviteBtnText}>Share Room Key ({roomCode})</Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity style={styles.inviteBtn} onPress={() => router.push('/join-room')}>
+              <Ionicons name="add-circle-outline" size={16} color={Colors.onPrimary} />
+              <Text style={styles.inviteBtnText}>Create or Join a Room</Text>
+            </TouchableOpacity>
+          )}
         </View>
 
         {/* Roommates List */}
         <View style={styles.section}>
           <Text style={styles.labelCaps}>HOUSEHOLD MEMBERS</Text>
           <View style={[styles.membersCard, Theme.shadows.subtle]}>
-            {users.map((u) => (
-              <View key={u.id} style={styles.userRow}>
-                <Image source={{ uri: u.avatar }} style={styles.avatar} />
-                <View style={styles.userInfo}>
-                  <View style={styles.nameRow}>
-                    <Text style={styles.userName}>{u.name}</Text>
-                    {u.id === currentUser.id && (
-                      <View style={styles.youBadge}>
-                        <Text style={styles.youBadgeText}>YOU</Text>
-                      </View>
-                    )}
+            {users.length === 0 ? (
+              <Text style={styles.userSubtext}>No members found.</Text>
+            ) : (
+              users.map((u) => (
+                <View key={u.id} style={styles.userRow}>
+                  <Image source={{ uri: u.avatar }} style={styles.avatar} />
+                  <View style={styles.userInfo}>
+                    <View style={styles.nameRow}>
+                      <Text style={styles.userName}>{u.name}</Text>
+                      {currentUser && u.id === currentUser.id && (
+                        <View style={styles.youBadge}>
+                          <Text style={styles.youBadgeText}>YOU</Text>
+                        </View>
+                      )}
+                    </View>
+                    <Text style={styles.userSubtext}>{u.email}</Text>
                   </View>
-                  <Text style={styles.userSubtext}>{u.email} • {u.phone}</Text>
                 </View>
-              </View>
-            ))}
+              ))
+            )}
           </View>
         </View>
       </ScrollView>

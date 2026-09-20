@@ -36,8 +36,12 @@ export default function RegisterScreen() {
 
     setLoading(true);
     try {
-      await registerUser(name, email);
-      router.replace('/(tabs)');
+      const res = await registerUser(name.trim(), email.trim());
+      if (res.success) {
+        router.replace('/(tabs)');
+      } else {
+        Alert.alert('Registration Error', res.error || 'Could not create account. Please try again.');
+      }
     } catch (err: any) {
       Alert.alert('Registration Error', err?.message || 'Could not register account. Please try again.');
     } finally {
@@ -54,7 +58,7 @@ export default function RegisterScreen() {
         </View>
 
         <View style={[styles.card, Theme.shadows.card]}>
-          <Text style={styles.cardTitle}>Register</Text>
+          <Text style={styles.cardTitle}>Register Account</Text>
 
           <View style={styles.field}>
             <Text style={styles.labelCaps}>FULL NAME</Text>
@@ -64,7 +68,7 @@ export default function RegisterScreen() {
                 style={styles.input}
                 value={name}
                 onChangeText={setName}
-                placeholder="Enter your name"
+                placeholder="e.g. Aman Sharma"
                 placeholderTextColor={Colors.textMuted}
               />
             </View>
@@ -80,7 +84,7 @@ export default function RegisterScreen() {
                 onChangeText={setEmail}
                 keyboardType="email-address"
                 autoCapitalize="none"
-                placeholder="alex@flatledger.app"
+                placeholder="aman@example.com"
                 placeholderTextColor={Colors.textMuted}
               />
             </View>
