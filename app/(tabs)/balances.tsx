@@ -18,6 +18,7 @@ export default function BalancesScreen() {
     youAreOwedTotal,
     netBalanceTotal,
     roommateBalances,
+    roomName,
   } = useExpenses();
 
   const isPositive = netBalanceTotal >= 0;
@@ -36,7 +37,7 @@ export default function BalancesScreen() {
           <View style={styles.cardHeader}>
             <View style={styles.headerLeft}>
               <Ionicons name="wallet-outline" size={20} color={Colors.balancePositive} />
-              <Text style={styles.cardTitle}>Room 302 Balances</Text>
+              <Text style={styles.cardTitle}>{roomName} Balances</Text>
             </View>
             <View style={styles.optimizedPill}>
               <View style={styles.pulseDot} />

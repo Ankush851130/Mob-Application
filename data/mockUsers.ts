@@ -4,8 +4,8 @@ export interface User {
   isCurrentUser?: boolean;
   avatar: string;
   email: string;
-  phone: string;
-  room: string;
+  phone?: string;
+  room?: string;
   pushToken?: string;
 }
 

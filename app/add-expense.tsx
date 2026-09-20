@@ -30,10 +30,10 @@ const QUICK_TAGS = [
 
 export default function AddExpenseScreen() {
   const router = useRouter();
-  const { users, currentUser, addExpense } = useExpenses();
+  const { users, currentUser, addExpense, roomCode } = useExpenses();
 
   const [amount, setAmount] = useState('1800');
-  const [title, setTitle] = useState('March Electricity Bill');
+  const [title, setTitle] = useState('Electricity Bill');
   const [selectedCategory, setSelectedCategory] = useState<'Utilities' | 'Groceries' | 'Internet' | 'Food & Dining' | 'Rent' | 'Other'>('Utilities');
   const [categoryEmoji, setCategoryEmoji] = useState('⚡');
   const [paidById, setPaidById] = useState(currentUser.id);
@@ -108,7 +108,7 @@ export default function AddExpenseScreen() {
 
         <View style={styles.splittingPill}>
           <Ionicons name="flash" size={14} color={Colors.balancePositive} />
-          <Text style={styles.splittingText}>Splitting Flat 302</Text>
+          <Text style={styles.splittingText}>Splitting {roomCode}</Text>
         </View>
 
         <TouchableOpacity style={styles.headerBtn} onPress={handleSave}>

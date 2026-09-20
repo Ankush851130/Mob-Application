@@ -25,7 +25,7 @@ const CATEGORIES = [
 
 export default function ExpensesScreen() {
   const router = useRouter();
-  const { expenses } = useExpenses();
+  const { expenses, currentUser } = useExpenses();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
 
@@ -40,13 +40,38 @@ export default function ExpensesScreen() {
       if (!matchesSearch) return false;
 
       if (selectedCategory === 'all') return true;
-      if (selectedCategory === 'my_paid') return exp.paidById === CURRENT_USER.id;
+      if (selectedCategory === 'my_paid') return exp.paidById === currentUser.id;
       return exp.category === selectedCategory;
     });
-  }, [expenses, searchQuery, selectedCategory]);
+  }, [expenses, searchQuery, selectedCategory, currentUser.id]);
 
-  const totalMonthlySpend = useMemo(() => {
-    return expenses.reduce((sum, item) => sum + item.amount, 0);
+  const { categoryStats, totalMonthlySpend } = useMemo(() => {
+    const total = expenses.reduce((sum, item) => sum + item.amount, 0);
+    const map: Record<string, { amount: number; color: string; label: string }> = {
+      'Groceries': { amount: 0, color: Colors.primary, label: 'Groceries' },
+      'Utilities': { amount: 0, color: Colors.categoryUtilities, label: 'Utils' },
+      'Internet': { amount: 0, color: Colors.categoryWifi, label: 'WiFi' },
+      'Food & Dining': { amount: 0, color: Colors.balanceNegative, label: 'Food' },
+      'Rent': { amount: 0, color: '#8E44AD', label: 'Rent' },
+      'Other': { amount: 0, color: Colors.textMuted, label: 'Other' },
+    };
+
+    expenses.forEach((e) => {
+      const catKey = map[e.category] ? e.category : 'Other';
+      map[catKey].amount += e.amount;
+    });
+
+    const stats = Object.keys(map)
+      .map((k) => ({
+        key: k,
+        label: map[k].label,
+        color: map[k].color,
+        amount: map[k].amount,
+        pct: total > 0 ? Math.round((map[k].amount / total) * 100) : 0,
+      }))
+      .filter((item) => item.pct > 0);
+
+    return { categoryStats: stats, totalMonthlySpend: total };
   }, [expenses]);
 
   return (
@@ -97,7 +122,7 @@ export default function ExpensesScreen() {
           <View style={styles.overviewTopRow}>
             <View>
               <Text style={styles.labelCaps}>HOUSEHOLD OVERVIEW</Text>
-              <Text style={styles.monthTitle}>March 2025 • {expenses.length} bills</Text>
+              <Text style={styles.monthTitle}>Household Spend • {expenses.length} bills</Text>
             </View>
             <View style={styles.spendColumn}>
               <Text style={styles.spendAmount}>₹{totalMonthlySpend.toLocaleString('en-IN')}</Text>
@@ -107,30 +132,26 @@ export default function ExpensesScreen() {
 
           {/* Spend Distribution Mini Bar */}
           <View style={styles.barContainer}>
-            <View style={[styles.barSegment, { width: '40%', backgroundColor: Colors.primary }]} />
-            <View style={[styles.barSegment, { width: '35%', backgroundColor: Colors.categoryUtilities }]} />
-            <View style={[styles.barSegment, { width: '15%', backgroundColor: Colors.categoryWifi }]} />
-            <View style={[styles.barSegment, { width: '10%', backgroundColor: Colors.balanceNegative }]} />
+            {categoryStats.length > 0 ? (
+              categoryStats.map((item) => (
+                <View
+                  key={item.key}
+                  style={[styles.barSegment, { width: `${item.pct}%`, backgroundColor: item.color }]}
+                />
+              ))
+            ) : (
+              <View style={[styles.barSegment, { width: '100%', backgroundColor: Colors.surfaceContainer }]} />
+            )}
           </View>
 
-          {/* Mini Legend */}
+          {/* Dynamic Mini Legend */}
           <View style={styles.legendRow}>
-            <View style={styles.legendItem}>
-              <View style={[styles.legendDot, { backgroundColor: Colors.primary }]} />
-              <Text style={styles.legendText}>Groceries 40%</Text>
-            </View>
-            <View style={styles.legendItem}>
-              <View style={[styles.legendDot, { backgroundColor: Colors.categoryUtilities }]} />
-              <Text style={styles.legendText}>Utils 35%</Text>
-            </View>
-            <View style={styles.legendItem}>
-              <View style={[styles.legendDot, { backgroundColor: Colors.categoryWifi }]} />
-              <Text style={styles.legendText}>WiFi 15%</Text>
-            </View>
-            <View style={styles.legendItem}>
-              <View style={[styles.legendDot, { backgroundColor: Colors.balanceNegative }]} />
-              <Text style={styles.legendText}>Food 10%</Text>
-            </View>
+            {categoryStats.map((item) => (
+              <View key={item.key} style={styles.legendItem}>
+                <View style={[styles.legendDot, { backgroundColor: item.color }]} />
+                <Text style={styles.legendText}>{item.label} {item.pct}%</Text>
+              </View>
+            ))}
           </View>
         </View>
 

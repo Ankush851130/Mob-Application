@@ -17,6 +17,9 @@ export default function HomeScreen() {
   const {
     currentUser,
     expenses,
+    users,
+    roomCode,
+    roomName,
     youOweTotal,
     youAreOwedTotal,
     netBalanceTotal,
@@ -41,7 +44,7 @@ export default function HomeScreen() {
               <Text style={styles.greetingTitle}>Good morning, {currentUser.name}</Text>
               <Text style={styles.waveEmoji}>👋</Text>
             </View>
-            <Text style={styles.greetingSubtitle}>Room 302 • 4 Flatmates sharing living costs</Text>
+            <Text style={styles.greetingSubtitle}>{roomName} • {users.length} Flatmates sharing living costs</Text>
           </View>
 
           <TouchableOpacity
@@ -49,7 +52,7 @@ export default function HomeScreen() {
             onPress={() => router.push('/roommates')}
           >
             <View style={styles.groupDot} />
-            <Text style={styles.groupPillText}>Flat 302</Text>
+            <Text style={styles.groupPillText}>{roomCode}</Text>
             <Ionicons name="chevron-down" size={14} color={Colors.textSecondary} />
           </TouchableOpacity>
         </View>

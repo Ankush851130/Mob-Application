@@ -8,10 +8,11 @@ import { Typography } from '../../constants/typography';
 import { Spacing, Radius } from '../../constants/spacing';
 import Theme from '../../constants/theme';
 import { ScreenHeader } from '../../components/ScreenHeader';
-import { CURRENT_USER } from '../../data/mockUsers';
+import { useExpenses } from '../../context/ExpenseContext';
 
 export default function ProfileScreen() {
   const router = useRouter();
+  const { currentUser, roomCode, roomName } = useExpenses();
 
   const handleLogout = () => {
     Alert.alert('Sign Out', 'Are you sure you want to sign out?', [
@@ -27,13 +28,13 @@ export default function ProfileScreen() {
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         {/* User Card */}
         <View style={[styles.profileCard, Theme.shadows.card]}>
-          <Image source={{ uri: CURRENT_USER.avatar }} style={styles.avatar} />
-          <Text style={styles.userName}>{CURRENT_USER.name}</Text>
-          <Text style={styles.userEmail}>{CURRENT_USER.email}</Text>
+          <Image source={{ uri: currentUser.avatar }} style={styles.avatar} />
+          <Text style={styles.userName}>{currentUser.name}</Text>
+          <Text style={styles.userEmail}>{currentUser.email}</Text>
 
           <View style={styles.roomTag}>
             <Ionicons name="business" size={14} color={Colors.balancePositive} />
-            <Text style={styles.roomTagText}>{CURRENT_USER.room} • Flat 302</Text>
+            <Text style={styles.roomTagText}>{currentUser.room || 'Room'} • {roomCode}</Text>
           </View>
         </View>
 
@@ -45,7 +46,7 @@ export default function ProfileScreen() {
             <View style={styles.menuIconBox}>
               <Ionicons name="people-outline" size={20} color={Colors.primary} />
             </View>
-            <Text style={styles.menuText}>Roommates & Flat 302</Text>
+            <Text style={styles.menuText}>Roommates & {roomName}</Text>
             <Ionicons name="chevron-forward" size={18} color={Colors.textMuted} />
           </TouchableOpacity>
 

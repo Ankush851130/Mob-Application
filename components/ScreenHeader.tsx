@@ -6,6 +6,7 @@ import { Typography } from '../constants/typography';
 import { Spacing, Radius } from '../constants/spacing';
 import { CURRENT_USER } from '../data/mockUsers';
 import { FlatLedgerLogo } from './FlatLedgerLogo';
+import { useExpenses } from '../context/ExpenseContext';
 
 interface ScreenHeaderProps {
   title?: string;
@@ -22,6 +23,9 @@ export const ScreenHeader: React.FC<ScreenHeaderProps> = ({
   onNotificationPress,
   onProfilePress,
 }) => {
+  const { currentUser, roomCode } = useExpenses();
+  const activeUser = currentUser || CURRENT_USER;
+
   return (
     <View style={styles.header}>
       <View style={styles.leftContainer}>
@@ -38,7 +42,7 @@ export const ScreenHeader: React.FC<ScreenHeaderProps> = ({
               <Text style={styles.brandText}>FlatLedger</Text>
               <View style={styles.roomBadge}>
                 <Ionicons name="business" size={10} color={Colors.balancePositive} />
-                <Text style={styles.roomBadgeText}>ROOM 302</Text>
+                <Text style={styles.roomBadgeText}>ROOM {roomCode || '302'}</Text>
               </View>
             </View>
             {title ? <Text style={styles.subTitle}>{title}</Text> : null}
@@ -52,7 +56,7 @@ export const ScreenHeader: React.FC<ScreenHeaderProps> = ({
         </TouchableOpacity>
         
         <TouchableOpacity style={styles.avatarButton} onPress={onProfilePress}>
-          <Image source={{ uri: CURRENT_USER.avatar }} style={styles.avatar} />
+          <Image source={{ uri: activeUser.avatar }} style={styles.avatar} />
         </TouchableOpacity>
       </View>
     </View>

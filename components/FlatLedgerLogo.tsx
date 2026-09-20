@@ -10,13 +10,15 @@ interface FlatLedgerLogoProps {
 }
 
 export const FlatLedgerLogo: React.FC<FlatLedgerLogoProps> = ({ size = 'md', showText = true }) => {
-  const iconSize = size === 'sm' ? 20 : size === 'lg' ? 32 : 24;
+  const iconSize = size === 'sm' ? 18 : size === 'lg' ? 36 : 24;
+  const badgeSize = size === 'sm' ? 32 : size === 'lg' ? 56 : 40;
+  const borderRadius = size === 'sm' ? 10 : size === 'lg' ? 18 : 12;
   const textSize = size === 'sm' ? Typography.headlineSm : size === 'lg' ? Typography.headlineLgMobile : Typography.headlineSm;
 
   return (
     <View style={styles.container}>
-      <View style={[styles.iconBadge, { width: iconSize + 12, height: iconSize + 12 }]}>
-        <Ionicons name="wallet-outline" size={iconSize} color={Colors.primary} />
+      <View style={[styles.iconBadge, { width: badgeSize, height: badgeSize, borderRadius }]}>
+        <Ionicons name="wallet" size={iconSize} color={Colors.onPrimary} />
       </View>
       {showText && (
         <Text style={[styles.text, textSize]}>
@@ -34,10 +36,14 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   iconBadge: {
-    backgroundColor: Colors.balancePositiveBg,
-    borderRadius: 12,
+    backgroundColor: Colors.balancePositive,
     alignItems: 'center',
     justifyContent: 'center',
+    shadowColor: Colors.balancePositive,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 3,
   },
   text: {
     color: Colors.textPrimary,
