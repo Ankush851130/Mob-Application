@@ -13,7 +13,7 @@ import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '../constants/colors';
-import { Typography } from '../constants/typography';
+import { Typography, FontFamily } from '../constants/typography';
 import { Radius, Spacing } from '../constants/spacing';
 import Theme from '../constants/theme';
 import { CategoryChip } from '../components/CategoryChip';
@@ -281,7 +281,7 @@ const styles = StyleSheet.create({
   },
   saveText: {
     color: Colors.balancePositive,
-    fontFamily: Typography.headlineSm.fontFamily,
+    fontFamily: FontFamily.semiBold,
   },
   splittingPill: {
     flexDirection: 'row',

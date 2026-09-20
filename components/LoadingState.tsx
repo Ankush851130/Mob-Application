@@ -15,13 +15,17 @@ export const LoadingState: React.FC<{ message?: string }> = ({ message = 'Loadin
 
 const styles = StyleSheet.create({
   container: {
-    padding: Spacing.xl,
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    padding: Spacing.xl,
+    backgroundColor: Colors.background,
     gap: Spacing.sm,
   },
   text: {
-    ...Typography.bodyMd,
+    fontSize: 14,
+    fontWeight: '500',
     color: Colors.textSecondary,
   },
 });
+

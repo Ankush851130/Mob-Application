@@ -21,13 +21,18 @@ app.use(express.json());
 // Attach io to app so routes can broadcast events
 app.set('io', io);
 
+// Health check endpoint
+app.get('/', (req, res) => {
+  res.json({ status: 'online', service: 'FlatLedger Backend API' });
+});
+
 // API Routes
 app.use('/api', apiRoutes);
 
-// MongoDB connection with fallback in-memory mode
+// MongoDB connection with timeout configuration
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/flatledger';
 
-mongoose.connect(MONGO_URI)
+mongoose.connect(MONGO_URI, { serverSelectionTimeoutMS: 5000 })
   .then(() => console.log('✅ Connected to MongoDB database successfully.'))
   .catch((err) => {
     console.warn('⚠️ MongoDB connection warning (Running in memory/cache fallback mode):', err.message);

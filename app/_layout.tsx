@@ -14,7 +14,7 @@ import { LoadingState } from '../components/LoadingState';
 import { ExpenseProvider } from '../context/ExpenseContext';
 
 export default function RootLayout() {
-  const [fontsLoaded] = useFonts({
+  const [fontsLoaded, fontError] = useFonts({
     PlusJakartaSans_400Regular,
     PlusJakartaSans_500Medium,
     PlusJakartaSans_600SemiBold,
@@ -22,7 +22,7 @@ export default function RootLayout() {
     PlusJakartaSans_800ExtraBold,
   });
 
-  if (!fontsLoaded) {
+  if (!fontsLoaded && !fontError) {
     return (
       <SafeAreaProvider>
         <LoadingState message="Initializing FlatLedger..." />
@@ -51,8 +51,7 @@ export default function RootLayout() {
             }}
           />
           <Stack.Screen name="expense/[id]" options={{ animation: 'slide_from_right' }} />
-          <Stack.Screen name="(auth)/login" options={{ animation: 'fade' }} />
-          <Stack.Screen name="(auth)/register" options={{ animation: 'slide_from_right' }} />
+          <Stack.Screen name="(auth)" options={{ headerShown: false }} />
           <Stack.Screen name="roommates" options={{ animation: 'slide_from_right' }} />
           <Stack.Screen name="settings" options={{ animation: 'slide_from_right' }} />
           <Stack.Screen name="activity" options={{ animation: 'slide_from_right' }} />

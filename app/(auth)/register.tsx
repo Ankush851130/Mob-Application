@@ -1,5 +1,14 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  ScrollView,
+  Alert,
+  ActivityIndicator,
+} from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -8,15 +17,32 @@ import { Typography } from '../../constants/typography';
 import { Radius, Spacing } from '../../constants/spacing';
 import Theme from '../../constants/theme';
 import { FlatLedgerLogo } from '../../components/FlatLedgerLogo';
+import { useExpenses } from '../../context/ExpenseContext';
 
 export default function RegisterScreen() {
   const router = useRouter();
+  const { registerUser } = useExpenses();
+
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleRegister = () => {
-    router.replace('/(tabs)');
+  const handleRegister = async () => {
+    if (!name.trim() || !email.trim() || !password.trim()) {
+      Alert.alert('Missing Fields', 'Please enter your Full Name, Email, and Password.');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      await registerUser(name, email);
+      router.replace('/(tabs)');
+    } catch (err: any) {
+      Alert.alert('Registration Error', err?.message || 'Could not register account. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -34,7 +60,13 @@ export default function RegisterScreen() {
             <Text style={styles.labelCaps}>FULL NAME</Text>
             <View style={styles.inputBox}>
               <Ionicons name="person-outline" size={18} color={Colors.textMuted} />
-              <TextInput style={styles.input} value={name} onChangeText={setName} placeholder="Ankush" />
+              <TextInput
+                style={styles.input}
+                value={name}
+                onChangeText={setName}
+                placeholder="Enter your name"
+                placeholderTextColor={Colors.textMuted}
+              />
             </View>
           </View>
 
@@ -42,7 +74,15 @@ export default function RegisterScreen() {
             <Text style={styles.labelCaps}>EMAIL ADDRESS</Text>
             <View style={styles.inputBox}>
               <Ionicons name="mail-outline" size={18} color={Colors.textMuted} />
-              <TextInput style={styles.input} value={email} onChangeText={setEmail} keyboardType="email-address" />
+              <TextInput
+                style={styles.input}
+                value={email}
+                onChangeText={setEmail}
+                keyboardType="email-address"
+                autoCapitalize="none"
+                placeholder="alex@flatledger.app"
+                placeholderTextColor={Colors.textMuted}
+              />
             </View>
           </View>
 
@@ -50,12 +90,27 @@ export default function RegisterScreen() {
             <Text style={styles.labelCaps}>PASSWORD</Text>
             <View style={styles.inputBox}>
               <Ionicons name="lock-closed-outline" size={18} color={Colors.textMuted} />
-              <TextInput style={styles.input} value={password} onChangeText={setPassword} secureTextEntry />
+              <TextInput
+                style={styles.input}
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry
+                placeholder="••••••••"
+                placeholderTextColor={Colors.textMuted}
+              />
             </View>
           </View>
 
-          <TouchableOpacity style={[styles.loginBtn, Theme.shadows.glow]} onPress={handleRegister}>
-            <Text style={styles.loginBtnText}>Create Account</Text>
+          <TouchableOpacity
+            style={[styles.loginBtn, Theme.shadows.glow, loading && { opacity: 0.7 }]}
+            onPress={handleRegister}
+            disabled={loading}
+          >
+            {loading ? (
+              <ActivityIndicator color={Colors.onPrimary} />
+            ) : (
+              <Text style={styles.loginBtnText}>Create Account</Text>
+            )}
           </TouchableOpacity>
         </View>
 

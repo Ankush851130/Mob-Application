@@ -71,12 +71,7 @@ export default function TabLayout() {
           ),
         }}
       />
-      <Tabs.Screen
-        name="activity"
-        options={{
-          href: null, // Hidden tab accessible programmatically
-        }}
-      />
+
     </Tabs>
   );
 }

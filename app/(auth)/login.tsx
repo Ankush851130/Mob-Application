@@ -1,5 +1,14 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  ScrollView,
+  Alert,
+  ActivityIndicator,
+} from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -8,14 +17,31 @@ import { Typography } from '../../constants/typography';
 import { Radius, Spacing } from '../../constants/spacing';
 import Theme from '../../constants/theme';
 import { FlatLedgerLogo } from '../../components/FlatLedgerLogo';
+import { useExpenses } from '../../context/ExpenseContext';
 
 export default function LoginScreen() {
   const router = useRouter();
+  const { loginUser } = useExpenses();
+
   const [email, setEmail] = useState('ankush@flatledger.app');
   const [password, setPassword] = useState('password123');
+  const [loading, setLoading] = useState(false);
 
-  const handleLogin = () => {
-    router.replace('/(tabs)');
+  const handleLogin = async () => {
+    if (!email.trim() || !password.trim()) {
+      Alert.alert('Missing Fields', 'Please enter your Email Address and Password.');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      await loginUser(email);
+      router.replace('/(tabs)');
+    } catch (err: any) {
+      Alert.alert('Sign In Error', err?.message || 'Could not sign in. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -58,8 +84,16 @@ export default function LoginScreen() {
             </View>
           </View>
 
-          <TouchableOpacity style={[styles.loginBtn, Theme.shadows.glow]} onPress={handleLogin}>
-            <Text style={styles.loginBtnText}>Sign In to Flat 302</Text>
+          <TouchableOpacity
+            style={[styles.loginBtn, Theme.shadows.glow, loading && { opacity: 0.7 }]}
+            onPress={handleLogin}
+            disabled={loading}
+          >
+            {loading ? (
+              <ActivityIndicator color={Colors.onPrimary} />
+            ) : (
+              <Text style={styles.loginBtnText}>Sign In to Flat 302</Text>
+            )}
           </TouchableOpacity>
         </View>
 

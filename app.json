@@ -20,7 +20,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#f7f9fb"
-      }
+      },
+      "usesCleartextTraffic": true
     },
     "plugins": [
       "expo-router"

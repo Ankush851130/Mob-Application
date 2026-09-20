@@ -18,6 +18,8 @@ interface ExpenseContextType {
   roomName: string;
   joinFlatRoom: (code: string) => Promise<boolean>;
   createFlatRoom: (name: string) => Promise<string>;
+  registerUser: (name: string, email: string) => Promise<boolean>;
+  loginUser: (email: string) => Promise<boolean>;
   addExpense: (expense: Omit<Expense, 'id'>) => void;
   deleteExpense: (id: string) => void;
   recordSettlement: (fromUserId: string, toUserId: string, amount: number) => void;
@@ -32,35 +34,103 @@ const ExpenseContext = createContext<ExpenseContextType | undefined>(undefined);
 export const ExpenseProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [expenses, setExpenses] = useState<Expense[]>(INITIAL_EXPENSES);
   const [users, setUsers] = useState<User[]>(MOCK_USERS);
-  const [currentUser] = useState<User>(CURRENT_USER);
+  const [currentUser, setCurrentUser] = useState<User>(CURRENT_USER);
   const [roomCode, setRoomCode] = useState<string>('FLAT302');
   const [roomName, setRoomName] = useState<string>('Apartment 302 Roommates');
 
-  // Socket.io Listener & Push Token Registration
-  useEffect(() => {
-    const socket = getSocket();
-
-    socket.emit('join_room', roomCode);
-
-    registerForPushNotificationsAsync().then((token) => {
-      if (token) {
-        currentUser.pushToken = token;
-        apiService.joinRoom(roomCode, { ...currentUser, pushToken: token }).catch(console.warn);
+  const registerUser = async (name: string, email: string): Promise<boolean> => {
+    const newUser: User = {
+      id: `u_${Date.now()}`,
+      name: name.trim() || 'Roommate',
+      email: email.trim(),
+      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150',
+    };
+    try {
+      const res = await apiService.registerUser(name, email);
+      if (res && res.success && res.user) {
+        setCurrentUser(res.user);
+        setUsers((prev) => [...prev.filter((u) => u.id !== res.user.id), res.user]);
+        return true;
       }
-    });
+    } catch (e) {
+      console.warn('API register fallback to local state:', e);
+    }
+    setCurrentUser(newUser);
+    setUsers((prev) => [...prev, newUser]);
+    return true;
+  };
 
-    const handleExpenseAdded = (newExpense: Expense) => {
-      setExpenses((prev) => {
-        if (prev.some((e) => e.id === newExpense.id)) return prev;
-        return [newExpense, ...prev];
-      });
-    };
+  const loginUser = async (email: string): Promise<boolean> => {
+    try {
+      const res = await apiService.loginUser(email);
+      if (res && res.success && res.user) {
+        setCurrentUser(res.user);
+        return true;
+      }
+    } catch (e) {
+      console.warn('API login fallback:', e);
+    }
+    const found = users.find((u) => u.email.toLowerCase() === email.toLowerCase());
+    if (found) {
+      setCurrentUser(found);
+      return true;
+    }
+    return true;
+  };
 
-    socket.on('expense:added', handleExpenseAdded);
+  // Sync expenses from backend server & Socket.io Listener & Push Token Registration
+  useEffect(() => {
+    let socket: any = null;
+    let isMounted = true;
 
-    return () => {
-      socket.off('expense:added', handleExpenseAdded);
-    };
+    // Load live expenses from backend DB on startup
+    apiService.fetchRoomExpenses(roomCode)
+      .then((res) => {
+        if (isMounted && res && res.success) {
+          if (res.expenses && res.expenses.length > 0) {
+            setExpenses(res.expenses);
+          }
+          if (res.room) {
+            setRoomName(res.room.name);
+            if (res.room.members && res.room.members.length > 0) {
+              setUsers(res.room.members);
+            }
+          }
+        }
+      })
+      .catch((err) => console.warn('Initial data load warning:', err));
+
+    try {
+      socket = getSocket();
+      socket.emit('join_room', roomCode);
+
+      registerForPushNotificationsAsync()
+        .then((token) => {
+          if (token) {
+            currentUser.pushToken = token;
+            apiService.joinRoom(roomCode, { ...currentUser, pushToken: token }).catch(console.warn);
+          }
+        })
+        .catch((err) => console.warn('Push notification warning:', err));
+
+      const handleExpenseAdded = (newExpense: Expense) => {
+        setExpenses((prev) => {
+          if (prev.some((e) => e.id === newExpense.id)) return prev;
+          return [newExpense, ...prev];
+        });
+      };
+
+      socket.on('expense:added', handleExpenseAdded);
+
+      return () => {
+        isMounted = false;
+        if (socket) {
+          socket.off('expense:added', handleExpenseAdded);
+        }
+      };
+    } catch (e) {
+      console.warn('Socket setup warning:', e);
+    }
   }, [roomCode]);
 
   const joinFlatRoom = async (code: string): Promise<boolean> => {
@@ -220,6 +290,8 @@ export const ExpenseProvider: React.FC<{ children: React.ReactNode }> = ({ child
         roomName,
         joinFlatRoom,
         createFlatRoom,
+        registerUser,
+        loginUser,
         addExpense,
         deleteExpense,
         recordSettlement,
